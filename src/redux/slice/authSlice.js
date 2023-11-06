@@ -7,6 +7,8 @@ const authSlice = createSlice({
     uid: null,
     idToken: null,
     userData: null,
+    userClients: null,
+    client: null,
   },
 
   reducers: {
@@ -22,16 +24,36 @@ const authSlice = createSlice({
     setUserData: (state, action) => {
       state.userData = action.payload;
     },
+    setUserClients: (state, action) => {
+      state.userClients = action.payload;
+    },
+    setClient: (state, action) => {
+      state.client = action.payload;
+    },
+    setProject: (state, action) => {
+      state.project = action.payload;
+    },
     clearUser: (state, action) => {
       (state.user = null),
         (state.uid = null),
         (state.idToken = null),
-        (state.userData = null);
+        (state.userData = null),
+        (state.userClients = null),
+        (state.client = null),
+        (state.paoject = null);
     },
   },
 });
 
-export const { setUser, setIdToken, setUid, setUserData, clearUser } =
-  authSlice.actions;
+export const {
+  setUser,
+  setIdToken,
+  setUid,
+  setUserData,
+  setUserClients,
+  setClient,
+  setProject,
+  clearUser,
+} = authSlice.actions;
 
 export default authSlice.reducer;

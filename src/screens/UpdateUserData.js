@@ -9,27 +9,33 @@ import {
 } from "react-native";
 import { colors } from "../theme/colors";
 import Header from "../components/Header";
-import { usePutDbMutation } from "../services/daApi";
+import { usePutUserMutation } from "../services/daApi";
 import { useNavigation } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
 import { setUserData } from "../redux/slice/authSlice";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 const UpdateUserData = ({ navigation, route }) => {
   const dispatch = useDispatch();
   const { userData } = route.params;
-  const [putDb, result] = usePutDbMutation();
+  const [putDb, result] = usePutUserMutation();
   const [nombre, setNombre] = useState(userData.nombre);
   const [profesion, setProfesion] = useState(userData.profesion);
   const [ciudad, setCiudad] = useState(userData.ciudad);
   const [pais, setPais] = useState(userData.pais);
-  const [edad, setEdad] = useState(userData.edad);
+  const [date, setDate] = useState(new Date());
+  const [birthDate, setBirthDate] = useState(userData.birthDate);
+  const [showPicker, setShowPicker] = useState(false);
+  const [dateToShow, setDateToShow] = useState(
+    `${birthDate.day} / ${birthDate.month} / ${birthDate.year}`
+  );
 
   let updateUser = {
     nombre,
     profesion,
     ciudad,
     pais,
-    edad,
+    birthDate,
     id: userData.id,
   };
 
@@ -37,6 +43,23 @@ const UpdateUserData = ({ navigation, route }) => {
     const resultado = await putDb(updateUser);
     dispatch(setUserData(updateUser));
     navigation.goBack();
+  };
+
+  const toggleShowPicker = () => {
+    setShowPicker(!showPicker);
+  };
+
+  const selectDate = ({ type }, selectedDate) => {
+    if (type == "set") {
+      setDate(selectedDate);
+      const year = selectedDate.getFullYear();
+      const month = selectedDate.getMonth() + 1;
+      const day = selectedDate.getDate();
+
+      setBirthDate({ day, month, year });
+      setDateToShow(`${day} / ${month} / ${year}`);
+    }
+    toggleShowPicker();
   };
 
   return (
@@ -71,16 +94,35 @@ const UpdateUserData = ({ navigation, route }) => {
           style={styles.text}
           placeholder="Ingrese su pais"
         />
-        <Text>Edad</Text>
-        <TextInput
-          onChangeText={(value) => setEdad(value)}
-          value={edad}
-          style={styles.text}
-          placeholder="Ingrese su edad"
-        />
-        <Pressable style={styles.button} onPress={updateData}>
-          <Text style={styles.buttonText}>Guardar cambios</Text>
+        <Pressable onPress={toggleShowPicker}>
+          <Text>Fecha de nacimiento</Text>
+          <TextInput
+            value={dateToShow}
+            style={styles.text}
+            placeholder="Ingrese su fecha de nacimiento"
+            placeholderTextColor="black"
+            editable={false}
+          />
         </Pressable>
+
+        {showPicker && (
+          <DateTimePicker
+            mode="date"
+            display="spinner"
+            value={date}
+            onChange={selectDate}
+          />
+        )}
+
+        <View style={styles.buttons}>
+          <Pressable style={styles.button} onPress={updateData}>
+            <Text style={styles.buttonText}> Guardar </Text>
+          </Pressable>
+
+          <Pressable style={styles.button} onPress={() => navigation.goBack()}>
+            <Text style={styles.buttonText}>Cancelar</Text>
+          </Pressable>
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -108,6 +150,10 @@ const styles = StyleSheet.create({
     // Text styles
     textAlign: "center",
     fontSize: 20,
+    color: "black",
+  },
+  buttons: {
+    flexDirection: "row",
   },
   button: {
     // Button styles
@@ -124,6 +170,12 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     fontFamily: "Satisfy",
     color: "black",
+  },
+  backButton: {
+    // Back button styles
+    position: "absolute",
+    top: 45,
+    left: 10,
   },
 });
 

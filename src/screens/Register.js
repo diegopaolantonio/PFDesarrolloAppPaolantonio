@@ -11,12 +11,12 @@ import { firebaseAuth } from "../firebase/firebaseAuth";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { useNavigation } from "@react-navigation/native";
 import Header from "../components/Header";
-import { usePutDbMutation } from "../services/daApi";
+import { usePutUserMutation } from "../services/daApi";
 
 const Login = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [putDb, result] = usePutDbMutation();
+  const [putUser, result] = usePutUserMutation();
 
   const handleRegister = async () => {
     try {
@@ -29,13 +29,13 @@ const Login = ({ navigation }) => {
       let user = {
         id: response.user.uid,
         nombre: "",
-        edad: 0,
+        birthDate: { day: "", month: "", year: "" },
         profesion: "",
         ciudad: "",
         pais: "",
       };
 
-      const resultado = await putDb(user);
+      const resultado = await putUser(user);
 
       navigation.navigate("login");
     } catch (error) {

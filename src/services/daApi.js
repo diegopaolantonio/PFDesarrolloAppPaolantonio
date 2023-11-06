@@ -21,27 +21,53 @@ export const daApi = createApi({
     }),
 
     // Trae el usuario en la base de dato
-    getDb: builder.query({
+    getUsers: builder.query({
       query: () => "users.json",
+    }),
+
+    // Trae el usuario en la base de dato
+    getClients: builder.query({
+      query: () => "clients.json",
     }),
 
     // ENVIA LA IMAGEN A LA BD
     putImage: builder.mutation({
-      query: (image) => ({
-        url: "image.json",
+      query: (profileImage) => ({
+        url: `image/${profileImage.id}.json`,
         method: "PUT",
-        body: image,
+        body: profileImage,
       }),
     }),
 
     // Crea el usuario en la base de dato
-    putDb: builder.mutation({
+    putUser: builder.mutation({
       query: (user) => ({
         url: `users/${user.id}.json`,
         method: "PUT",
         body: user,
       }),
     }),
+    // Crea el usuario en la base de dato
+    putClient: builder.mutation({
+      query: ({uid, client, clientData}) => ({
+        url: `clients/${uid}/${client}.json`,
+        method: "PUT",
+        body: clientData,
+      }),
+    }),
+    putProject: builder.mutation({
+      query: ({uid, client, project}) => ({
+        url: `clients/${uid}/${client}/projects.json`,
+        method: "PUT",
+        body: project,
+      }),
+    }),
+    deleteClient: builder.mutation({
+      query: (client) => ({
+        url: `clients/${client.id}/${client.nombre}.json`,
+        method: "DELETE",
+      })
+    })
   }),
 });
 
@@ -49,7 +75,11 @@ export const {
   useGetCategoriesQuery,
   useGetProductsQuery,
   useGetImageQuery,
-  useGetDbQuery,
+  useGetUsersQuery,
+  useGetClientsQuery,
   usePutImageMutation,
-  usePutDbMutation,
+  usePutUserMutation,
+  usePutClientMutation,
+  usePutProjectMutation,
+  useDeleteClientMutation,
 } = daApi;

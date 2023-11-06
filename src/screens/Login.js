@@ -15,31 +15,50 @@ import {
   setIdToken,
   setUid,
   setUserData,
+  setUserClients,
 } from "../redux/slice/authSlice";
 import { useNavigation } from "@react-navigation/native";
 import Header from "../components/Header";
-import { useGetDbQuery } from "../services/daApi";
+import { useGetClientsQuery, useGetUsersQuery } from "../services/daApi";
 
 const Login = ({ navigation }) => {
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { data, isLoading, error, isError, refetch } = useGetDbQuery();
+  const {
+    data: users,
+    isLoading,
+    error,
+    isError,
+    refetch,
+  } = useGetUsersQuery();
+  const {
+    data: clientes,
+    isLoadingC,
+    errorC,
+    isErrorC,
+    refetchC,
+  } = useGetClientsQuery();
+
+  let userClients = null;
 
   const handleLogin = async () => {
     try {
+      refetch();
       const response = await signInWithEmailAndPassword(
         firebaseAuth,
         email,
         password
       );
 
-      const userData = data[response.user.uid];
+      const userData = users[response.user.uid];
+      if (clientes != null) userClients = clientes[response.user.uid];
 
       dispatch(setUser(response.user.email));
       dispatch(setUid(response.user.uid));
       dispatch(setIdToken(response._tokenResponse.idToken));
       dispatch(setUserData(userData));
+      dispatch(setUserClients(userClients));
     } catch (error) {
       console.log(error);
     }

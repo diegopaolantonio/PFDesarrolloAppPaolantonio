@@ -1,23 +1,24 @@
 import React from "react";
 import { Text, StyleSheet, Pressable } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
-import { setCategorySelected } from "../redux/slice/homeSlice";
 import { colors } from "../theme/colors";
+import { useDispatch } from "react-redux";
+import { setProject } from "../redux/slice/authSlice";
 
-const CategoryItem = ({ item, navigation }) => {
+const ProjectItem = ({ item, projectsArray, navigation }) => {
   const dispatch = useDispatch();
 
-  const selectCategory = () => {
-    dispatch(setCategorySelected(item));
-    navigation.navigate("products", { item: item });
+  const selectProject = () => {
+    dispatch(setProject(item));
+    navigation.navigate("projectDetail", { item: item });
   };
+
   return (
     <Pressable
       onPress={() => {
-        selectCategory();
+        selectProject();
       }}
     >
-      <Text style={styles.categoryTitle}>{item}</Text>
+      <Text style={styles.categoryTitle}>{item.nombre}</Text> 
     </Pressable>
   );
 };
@@ -43,4 +44,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CategoryItem;
+export default ProjectItem;
