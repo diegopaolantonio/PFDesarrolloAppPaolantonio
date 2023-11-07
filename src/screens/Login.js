@@ -12,7 +12,6 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import { useDispatch } from "react-redux";
 import {
   setUser,
-  setIdToken,
   setUid,
   setUserData,
   setUserClients,
@@ -20,6 +19,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import Header from "../components/Header";
 import { useGetClientsQuery, useGetUsersQuery } from "../services/daApi";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Login = ({ navigation }) => {
   const dispatch = useDispatch();
@@ -54,9 +54,10 @@ const Login = ({ navigation }) => {
       const userData = users[response.user.uid];
       if (clientes != null) userClients = clientes[response.user.uid];
 
+      await AsyncStorage.setItem("userId", response.user.uid);
+
       dispatch(setUser(response.user.email));
       dispatch(setUid(response.user.uid));
-      dispatch(setIdToken(response._tokenResponse.idToken));
       dispatch(setUserData(userData));
       dispatch(setUserClients(userClients));
     } catch (error) {
@@ -80,7 +81,7 @@ const Login = ({ navigation }) => {
         style={styles.text}
         placeholder="Ingrese su Contraseña"
       />
-      <Pressable style={styles.button} onPress={handleLogin}>
+      <Pressable style={styles.button} onPress={() => handleLogin()}>
         <Text style={styles.buttonText}>Iniciar sesion</Text>
       </Pressable>
       <Pressable onPress={() => navigation.navigate("register")}>

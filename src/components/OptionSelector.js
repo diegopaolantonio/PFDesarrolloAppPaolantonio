@@ -3,11 +3,14 @@ import { ScrollView, StyleSheet } from "react-native";
 import SelectDropdown from "react-native-select-dropdown";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 
-const OptionSelector = ({selectOptions, selectedOption, setSelectedOption }) => {
-
+const OptionSelector = ({
+  selectOptions,
+  selectedOption,
+  setSelectedOption,
+}) => {
   const selectedIndexOption = (index) => {
     setSelectedOption(index);
-  }
+  };
 
   return (
     <ScrollView
@@ -18,7 +21,6 @@ const OptionSelector = ({selectOptions, selectedOption, setSelectedOption }) => 
       <SelectDropdown
         data={selectOptions}
         onSelect={(selectedItem, index) => {
-          console.log(selectedItem, index);
           selectedIndexOption(index);
         }}
         defaultButtonText={"Opciones"}

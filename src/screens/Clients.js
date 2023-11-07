@@ -1,7 +1,12 @@
 import React from "react";
 import Header from "../components/Header";
 import ClientsList from "../components/ClientsList";
-import { StyleSheet, SafeAreaView, Pressable } from "react-native";
+import {
+  ActivityIndicator,
+  StyleSheet,
+  SafeAreaView,
+  Pressable,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { colors } from "../theme/colors";
 import { AntDesign } from "@expo/vector-icons";
@@ -36,7 +41,15 @@ const Clients = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <Header title="Clientes" navigation={navigation} />
-      <ClientsList navigation={navigation} />
+      {isLoading ? (
+        <View style={styles.indicator}>
+          <ActivityIndicator size="small" color="blue" />
+        </View>
+      ) : (
+        <>
+          <ClientsList navigation={navigation} />
+        </>
+      )}
       <Pressable style={styles.addButton} onPress={() => goToAddClient()}>
         <AntDesign name="addfolder" size={24} color="black" />
       </Pressable>

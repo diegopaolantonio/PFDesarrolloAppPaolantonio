@@ -13,18 +13,33 @@ import { colors } from "../theme/colors";
 import { useDispatch, useSelector } from "react-redux";
 import { clearUser } from "../redux/slice/authSlice";
 import * as ImagePicker from "expo-image-picker";
-import { useGetImageQuery, usePutImageMutation } from "../services/daApi";
+import {
+  useGetImageQuery,
+  useGetUsersQuery,
+  usePutImageMutation,
+} from "../services/daApi";
 import * as Location from "expo-location";
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Profile = ({ navigation }) => {
   const dispatch = useDispatch();
   const [putImage, result] = usePutImageMutation();
   const [location, setLocation] = useState(null);
   const { data, isLoading, error, isError, refetch } = useGetImageQuery();
+  const {
+    data: users,
+    isLoadingUsers,
+    errorUsers,
+    isErrorUsers,
+    refetchUsers,
+  } = useGetUsersQuery();
 
   const uid = useSelector((state) => state.authSlice.uid);
-  const userData = useSelector((state) => state.authSlice.userData);
+  let userData = null;
+  if (users != null && users != undefined) {
+    userData = users[uid];
+  }
 
   let profileImage = { image: "" };
 
@@ -35,8 +50,21 @@ const Profile = ({ navigation }) => {
     navigation.navigate("updateUserData", { userData: userData });
   };
 
-  const userLogout = () => {
-    dispatch(clearUser());
+  const userLogout = async () => {
+    Alert.alert("Cerrar sesion", "Esta seguro que desea cerrar sesion", [
+      {
+        text: "Cancel",
+        onPress: () => console.log("Cancelar logout"),
+        style: "cancel",
+      },
+      {
+        text: "OK",
+        onPress: async () => {
+          await AsyncStorage.removeItem("userId");
+          dispatch(clearUser());
+        },
+      },
+    ]);
   };
 
   const verifyCamaraPermissions = async () => {

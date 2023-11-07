@@ -54,9 +54,6 @@ const AddClient = ({ navigation, route }) => {
       ]);
       return;
     }
-    console.log(uid);
-    console.log(client);
-    console.log(clientData);
     await putClient({ uid, client, clientData });
     refetch();
     setClient("");

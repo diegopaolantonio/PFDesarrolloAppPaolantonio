@@ -5,7 +5,6 @@ const authSlice = createSlice({
   initialState: {
     user: null,
     uid: null,
-    idToken: null,
     userData: null,
     userClients: null,
     client: null,
@@ -14,9 +13,6 @@ const authSlice = createSlice({
   reducers: {
     setUser: (state, action) => {
       state.user = action.payload;
-    },
-    setIdToken: (state, action) => {
-      state.idToken = action.payload;
     },
     setUid: (state, action) => {
       state.uid = action.payload;
@@ -36,7 +32,6 @@ const authSlice = createSlice({
     clearUser: (state, action) => {
       (state.user = null),
         (state.uid = null),
-        (state.idToken = null),
         (state.userData = null),
         (state.userClients = null),
         (state.client = null),
@@ -47,7 +42,6 @@ const authSlice = createSlice({
 
 export const {
   setUser,
-  setIdToken,
   setUid,
   setUserData,
   setUserClients,

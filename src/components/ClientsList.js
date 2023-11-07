@@ -22,7 +22,6 @@ const ClientsList = ({ navigation }) => {
       clientArray.push(key);
     }
   }
-  console.log(clientArray);
 
   return (
     <View>

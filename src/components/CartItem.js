@@ -1,17 +1,14 @@
 import React from "react";
-import { Image, View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text } from "react-native";
 
 const CartItem = ({ item }) => {
   return (
     <View style={styles.container}>
-      <View style={styles.imagenContainer}>
-        <Image style={styles.imagen} source={{ uri: item.thumbnail }} />
-      </View>
-      <Text style={styles.textItemTitle}>{item.title}</Text>
-      <View style={styles.textContainerPrice}>
-        <Text style={styles.textItemQuantity}>{item.quantity}</Text>
-        <Text style={styles.textItemPrice}>USD {item.totalPrice}</Text>
-      </View>
+      <Text style={styles.textItem}>{item.client}</Text>
+      <Text style={styles.textItem}>{item.project}</Text>
+      <Text style={styles.textItem}>{item.paymentStatus}</Text>
+      <Text style={styles.textItemQuantity}>{item.moneda}</Text>
+      <Text style={styles.textItemQuantity}>{item.monto}</Text>
     </View>
   );
 };
@@ -21,29 +18,13 @@ const styles = StyleSheet.create({
     margin: 5,
     flexDirection: "row",
   },
-  textItemTitle: {
+  textItem: {
     margin: 5,
-    width: "45%",
-  },
-  textContainerPrice: {
-    width: "40%",
-    flexDirection: "row",
+    width: "20%",
   },
   textItemQuantity: {
     margin: 5,
-    width: "40%",
-  },
-  textItemPrice: {
-    margin: 5,
-    width: "60%",
-  },
-  imagenContainer: {
     width: "15%",
-  },
-  imagen: {
-    width: 30,
-    height: 30,
-    borderRadius: 100,
   },
 });
 

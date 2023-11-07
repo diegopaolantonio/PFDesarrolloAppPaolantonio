@@ -20,8 +20,6 @@ import { AntDesign } from "@expo/vector-icons";
 
 const EditClient = ({ navigation, route }) => {
   const { uid, selectedClient, selectedClientData } = route.params;
-  console.log(selectedClientData);
-  console.log(selectedClient);
   const { data, isLoading, isError, error, refetch } = useGetClientsQuery();
   const [client, setClient] = useState(selectedClient);
   const [rubro, setRubro] = useState(selectedClientData[selectedClient].rubro);
