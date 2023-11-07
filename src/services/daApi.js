@@ -32,8 +32,8 @@ export const daApi = createApi({
 
     // ENVIA LA IMAGEN A LA BD
     putImage: builder.mutation({
-      query: (profileImage) => ({
-        url: `image/${profileImage.id}.json`,
+      query: ({ uid, profileImage }) => ({
+        url: `image/${uid}.json`,
         method: "PUT",
         body: profileImage,
       }),
@@ -49,25 +49,25 @@ export const daApi = createApi({
     }),
     // Crea el usuario en la base de dato
     putClient: builder.mutation({
-      query: ({uid, client, clientData}) => ({
+      query: ({ uid, client, clientData }) => ({
         url: `clients/${uid}/${client}.json`,
         method: "PUT",
         body: clientData,
       }),
     }),
     putProject: builder.mutation({
-      query: ({uid, client, project}) => ({
+      query: ({ uid, client, project }) => ({
         url: `clients/${uid}/${client}/projects.json`,
         method: "PUT",
         body: project,
       }),
     }),
     deleteClient: builder.mutation({
-      query: (client) => ({
-        url: `clients/${client.id}/${client.nombre}.json`,
+      query: ({ uid, client }) => ({
+        url: `clients/${uid}/${client}.json`,
         method: "DELETE",
-      })
-    })
+      }),
+    }),
   }),
 });
 

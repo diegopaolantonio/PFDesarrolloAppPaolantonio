@@ -37,7 +37,7 @@ const Clients = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <Header title="Clientes" navigation={navigation} />
       <ClientsList navigation={navigation} />
-      <Pressable style={styles.addButton} onPress={goToAddClient}>
+      <Pressable style={styles.addButton} onPress={() => goToAddClient()}>
         <AntDesign name="addfolder" size={24} color="black" />
       </Pressable>
     </SafeAreaView>

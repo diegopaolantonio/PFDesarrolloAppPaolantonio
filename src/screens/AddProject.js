@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Alert,
   Pressable,
@@ -15,6 +15,8 @@ import { colors } from "../theme/colors";
 import { useGetClientsQuery, usePutProjectMutation } from "../services/daApi";
 import { useSelector } from "react-redux";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { AntDesign } from "@expo/vector-icons";
+import OptionSelector from "../components/OptionSelector";
 
 const AddProject = ({ navigation }) => {
   const uid = useSelector((state) => state.authSlice.uid);
@@ -28,6 +30,7 @@ const AddProject = ({ navigation }) => {
   } = useGetClientsQuery();
   const [nombre, setNombre] = useState("");
   const [horas, setHoras] = useState("");
+  const [coin, setCoin] = useState("USD");
   const [monto, setMonto] = useState("");
   const [startDate, setStartDate] = useState({
     day: "1",
@@ -41,7 +44,8 @@ const AddProject = ({ navigation }) => {
   });
   const [cotizacion, setCotizacion] = useState("");
   const [estado, setEstado] = useState("En espera");
-  const [orden, setOrden] = useState("")
+  const [paymentStatus, setPaymentStatus] = useState("Sin facturar");
+  const [orden, setOrden] = useState("");
   const [date1, setDate1] = useState(new Date());
   const [date2, setDate2] = useState(new Date());
   const [showStartPicker, setShowStartPicker] = useState(false);
@@ -52,19 +56,48 @@ const AddProject = ({ navigation }) => {
   const [finishDateToShow, setFinishDateToShow] = useState(
     `${finishDate.day} / ${finishDate.month} / ${finishDate.year}`
   );
+  const [selectedCoinOption, setSelectedCoinOption] = useState(0);
+  const [selectedStatusOption, setSelectedStatusOption] = useState(0);
+  const [selectedPaymentStatusOption, setSelectedPaymentStatusOption] =
+    useState(0);
 
   const [putProject, result] = usePutProjectMutation();
+
+  const coinOption = ["Sin seleccion", "USD", "$", "E$", "R$"];
+
+  const statusOption = [
+    "Sin seleccion",
+    "En espera",
+    "En proceso",
+    "Finalizado",
+    "Cancelado",
+  ];
+
+  const paymentStatusOption = [
+    "Sin seleccion",
+    "Sin facturar",
+    "Facturado",
+    "Cobrado",
+  ];
+
+  const SelectedCoinProject = () => setCoin(coinOption[selectedCoinOption]);
+  const SelectedStatusProject = () =>
+    setEstado(statusOption[selectedStatusOption]);
+  const SelectedPaymentProject = () =>
+    setPaymentStatus(paymentStatusOption[selectedPaymentStatusOption]);
 
   let project = {
     nombre,
     id: Date.now() + Math.floor(Math.random() + 1000 + 1),
     horas,
+    coin,
     monto,
     startDate,
     finishDate,
     cotizacion,
     estado,
     orden,
+    paymentStatus,
   };
 
   const toggleShowStartPicker = () => {
@@ -101,6 +134,12 @@ const AddProject = ({ navigation }) => {
     toggleShowFinishPicker();
   };
 
+  useEffect(() => {
+    SelectedCoinProject();
+    SelectedStatusProject();
+    SelectedPaymentProject();
+  }, [selectedCoinOption, selectedStatusOption, selectedPaymentStatusOption]);
+
   const createProject = async () => {
     let projectArray = [];
     let projectsInDb = clients[uid][client].projects;
@@ -124,9 +163,12 @@ const AddProject = ({ navigation }) => {
     }
 
     await putProject({ uid, client, project: projectArray });
+
     refetch();
+
     setNombre("");
     setHoras("");
+    setCoin("USD");
     setMonto("");
     setStartDate({
       day: "1",
@@ -140,6 +182,11 @@ const AddProject = ({ navigation }) => {
     });
     setCotizacion("");
     setEstado("En espera");
+    setPaymentStatus("Sin facturar");
+
+    setSelectedCoinOption(0);
+    setSelectedStatusOption(0);
+    setSelectedPaymentStatusOption(0);
 
     navigation.goBack();
   };
@@ -147,7 +194,7 @@ const AddProject = ({ navigation }) => {
   return (
     <SafeAreaView>
       <ScrollView>
-        <Header title={"Agergar Proyecto"} />
+        <Header title={"Agregar Proyecto"} />
         <View style={styles.container}>
           <Text>Nombre</Text>
           <TextInput
@@ -156,6 +203,7 @@ const AddProject = ({ navigation }) => {
             style={styles.text}
             placeholder="Ingrese nombre del proyecto"
           />
+
           <Text>N° Cotizacion</Text>
           <TextInput
             onChangeText={(value) => setCotizacion(value)}
@@ -163,6 +211,7 @@ const AddProject = ({ navigation }) => {
             style={styles.text}
             placeholder="Ingrese numero de cotizacion"
           />
+
           <Text>N° de orden</Text>
           <TextInput
             onChangeText={(value) => setOrden(value)}
@@ -170,6 +219,7 @@ const AddProject = ({ navigation }) => {
             style={styles.text}
             placeholder="Ingrese numero de orden"
           />
+
           <Text>Horas</Text>
           <TextInput
             onChangeText={(value) => setHoras(value)}
@@ -177,6 +227,7 @@ const AddProject = ({ navigation }) => {
             style={styles.text}
             placeholder="Ingrese horas cotizadas"
           />
+
           <Text>Monto</Text>
           <TextInput
             onChangeText={(value) => setMonto(value)}
@@ -184,23 +235,35 @@ const AddProject = ({ navigation }) => {
             style={styles.text}
             placeholder="Ingrese monto cotizado"
           />
+          <Text>Tipo de moneda</Text>
+          <View style={styles.selector}>
+            <OptionSelector
+              selectOptions={coinOption}
+              selectedOption={selectedCoinOption}
+              setSelectedOption={setSelectedCoinOption}
+            />
+          </View>
+
           <Text>Estado</Text>
-          <TextInput
-            onChangeText={(value) => setEstado(value)}
-            value={estado}
-            style={styles.text}
-            placeholder="Ingrese estado del proyecto"
-          />
+          <View style={styles.selector}>
+            <OptionSelector
+              selectOptions={statusOption}
+              selectedOption={selectedStatusOption}
+              setSelectedOption={setSelectedStatusOption}
+            />
+          </View>
 
           <Pressable onPress={toggleShowStartPicker}>
-            <Text>Fecha de inicio</Text>
-            <TextInput
-              value={startDateToShow}
-              style={styles.text}
-              placeholder="Fecha estimada de inicio"
-              placeholderTextColor="black"
-              editable={false}
-            />
+            <View style={styles.datePicker}>
+              <Text>Fecha de inicio</Text>
+              <TextInput
+                value={startDateToShow}
+                style={styles.text}
+                placeholder="     Fecha estimada de inicio     "
+                placeholderTextColor="black"
+                editable={false}
+              />
+            </View>
           </Pressable>
 
           {showStartPicker && (
@@ -213,14 +276,16 @@ const AddProject = ({ navigation }) => {
           )}
 
           <Pressable onPress={toggleShowFinishPicker}>
-            <Text>Fecha de fin</Text>
-            <TextInput
-              value={finishDateToShow}
-              style={styles.text}
-              placeholder="Fecha estimada de finalizacion"
-              placeholderTextColor="black"
-              editable={false}
-            />
+            <View style={styles.datePicker}>
+              <Text>Fecha de fin</Text>
+              <TextInput
+                value={finishDateToShow}
+                style={styles.text}
+                placeholder="Fecha estimada de finalizacion"
+                placeholderTextColor="black"
+                editable={false}
+              />
+            </View>
           </Pressable>
 
           {showFinishPicker && (
@@ -231,6 +296,15 @@ const AddProject = ({ navigation }) => {
               onChange={selectFinishDate}
             />
           )}
+
+          <Text>Estado de pago</Text>
+          <View style={styles.selector}>
+            <OptionSelector
+              selectOptions={paymentStatusOption}
+              selectedOption={selectedPaymentStatusOption}
+              setSelectedOption={setSelectedPaymentStatusOption}
+            />
+          </View>
 
           <View style={styles.buttons}>
             <Pressable style={styles.button} onPress={() => createProject()}>
@@ -249,6 +323,9 @@ const AddProject = ({ navigation }) => {
           </View>
         </View>
       </ScrollView>
+      <Pressable style={styles.backButton} onPress={() => navigation.goBack()}>
+        <AntDesign name="leftcircleo" size={24} color="black" />
+      </Pressable>
     </SafeAreaView>
   );
 };
@@ -262,6 +339,7 @@ const styles = StyleSheet.create({
   },
   text: {
     // Container styles
+    alignItems: "center",
     width: "78%",
     padding: 10,
     margin: 10,
@@ -275,6 +353,15 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 20,
     color: "black",
+  },
+  selector: {
+    marginBottom: 10,
+    textAlign: "center",
+    width: "100%",
+  },
+  datePicker: {
+    alignItems: "center",
+    width: "100%",
   },
   buttons: {
     flexDirection: "row",
@@ -294,6 +381,12 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     fontFamily: "Satisfy",
     color: "black",
+  },
+  backButton: {
+    // Back button styles
+    position: "absolute",
+    top: 45,
+    left: 10,
   },
 });
 

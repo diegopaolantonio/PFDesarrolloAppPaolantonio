@@ -14,6 +14,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useDispatch } from "react-redux";
 import { setUserData } from "../redux/slice/authSlice";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { AntDesign } from "@expo/vector-icons";
 
 const UpdateUserData = ({ navigation, route }) => {
   const dispatch = useDispatch();
@@ -124,6 +125,9 @@ const UpdateUserData = ({ navigation, route }) => {
           </Pressable>
         </View>
       </View>
+      <Pressable style={styles.backButton} onPress={() => navigation.goBack()}>
+        <AntDesign name="leftcircleo" size={24} color="black" />
+      </Pressable>
     </SafeAreaView>
   );
 };

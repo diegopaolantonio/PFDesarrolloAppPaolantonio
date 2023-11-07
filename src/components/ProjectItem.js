@@ -18,7 +18,7 @@ const ProjectItem = ({ item, projectsArray, navigation }) => {
         selectProject();
       }}
     >
-      <Text style={styles.categoryTitle}>{item.nombre}</Text> 
+      <Text style={styles.categoryTitle}>{item.nombre}</Text>
     </Pressable>
   );
 };

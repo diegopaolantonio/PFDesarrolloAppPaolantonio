@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Alert,
   Pressable,
@@ -16,6 +16,7 @@ import { useGetClientsQuery, usePutProjectMutation } from "../services/daApi";
 import { useSelector } from "react-redux";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { AntDesign } from "@expo/vector-icons";
+import OptionSelector from "../components/OptionSelector";
 
 const EditProject = ({ navigation, route }) => {
   const { item } = route.params;
@@ -30,11 +31,13 @@ const EditProject = ({ navigation, route }) => {
   } = useGetClientsQuery();
   const [nombre, setNombre] = useState(item.nombre);
   const [horas, setHoras] = useState(item.horas);
+  const [coin, setCoin] = useState("USD");
   const [monto, setMonto] = useState(item.monto);
   const [startDate, setStartDate] = useState(item.startDate);
   const [finishDate, setFinishDate] = useState(item.finishDate);
   const [cotizacion, setCotizacion] = useState(item.cotizacion);
   const [estado, setEstado] = useState(item.estado);
+  const [paymentStatus, setPaymentStatus] = useState("Sin facturar");
   const [orden, setOrden] = useState(item.orden);
   const [date1, setDate1] = useState(new Date());
   const [date2, setDate2] = useState(new Date());
@@ -46,19 +49,48 @@ const EditProject = ({ navigation, route }) => {
   const [finishDateToShow, setFinishDateToShow] = useState(
     `${item.finishDate.day} / ${item.finishDate.month} / ${item.finishDate.year}`
   );
+  const [selectedCoinOption, setSelectedCoinOption] = useState(0);
+  const [selectedStatusOption, setSelectedStatusOption] = useState(0);
+  const [selectedPaymentStatusOption, setSelectedPaymentStatusOption] =
+    useState(0);
 
   const [putProject, result] = usePutProjectMutation();
+
+  const coinOption = ["Sin seleccion", "USD", "$", "E$", "R$"];
+
+  const statusOption = [
+    "Sin seleccion",
+    "En espera",
+    "En proceso",
+    "Finalizado",
+    "Cancelado",
+  ];
+
+  const paymentStatusOption = [
+    "Sin seleccion",
+    "Sin facturar",
+    "Facturado",
+    "Cobrado",
+  ];
+
+  const SelectedCoinProject = () => setCoin(coinOption[selectedCoinOption]);
+  const SelectedStatusProject = () =>
+    setEstado(statusOption[selectedStatusOption]);
+  const SelectedPaymentProject = () =>
+    setPaymentStatus(paymentStatusOption[selectedPaymentStatusOption]);
 
   let project = {
     nombre,
     id: item.id,
     horas,
+    coin,
     monto,
     startDate,
     finishDate,
     cotizacion,
     estado,
     orden,
+    paymentStatus,
   };
 
   const toggleShowStartPicker = () => {
@@ -95,6 +127,12 @@ const EditProject = ({ navigation, route }) => {
     toggleShowFinishPicker();
   };
 
+  useEffect(() => {
+    SelectedCoinProject();
+    SelectedStatusProject();
+    SelectedPaymentProject();
+  }, [selectedCoinOption, selectedStatusOption, selectedPaymentStatusOption]);
+
   const createProject = async () => {
     let projectArray = [];
     let projectsInDb = clients[uid][client].projects;
@@ -121,9 +159,12 @@ const EditProject = ({ navigation, route }) => {
     UpdatedProjectArray.push(project);
 
     await putProject({ uid, client, project: UpdatedProjectArray });
+
     refetch();
+
     setNombre("");
     setHoras("");
+    setCoin("USD");
     setMonto("");
     setStartDate({
       day: "1",
@@ -137,6 +178,11 @@ const EditProject = ({ navigation, route }) => {
     });
     setCotizacion("");
     setEstado("En espera");
+    setPaymentStatus("Sin facturar");
+
+    setSelectedCoinOption(0);
+    setSelectedStatusOption(0);
+    setSelectedPaymentStatusOption(0);
 
     navigation.goBack();
   };
@@ -161,9 +207,12 @@ const EditProject = ({ navigation, route }) => {
     }
 
     await putProject({ uid, client, project: UpdatedProjectArray });
+
     refetch();
+
     setNombre("");
     setHoras("");
+    setCoin("USD");
     setMonto("");
     setStartDate({
       day: "1",
@@ -177,6 +226,11 @@ const EditProject = ({ navigation, route }) => {
     });
     setCotizacion("");
     setEstado("En espera");
+    setPaymentStatus("Sin facturar");
+
+    setSelectedCoinOption(0);
+    setSelectedStatusOption(0);
+    setSelectedPaymentStatusOption(0);
 
     navigation.navigate("projects", { item: client });
   };
@@ -184,7 +238,7 @@ const EditProject = ({ navigation, route }) => {
   return (
     <SafeAreaView>
       <ScrollView>
-        <Header title={"Agergar Proyecto"} />
+        <Header title={"Editar Proyecto"} />
         <View style={styles.container}>
           <Text>Nombre</Text>
           <TextInput
@@ -221,23 +275,35 @@ const EditProject = ({ navigation, route }) => {
             style={styles.text}
             placeholder="Ingrese monto cotizado"
           />
+          <Text>Tipo de moneda</Text>
+          <View style={styles.selector}>
+            <OptionSelector
+              selectOptions={coinOption}
+              selectedOption={selectedCoinOption}
+              setSelectedOption={setSelectedCoinOption}
+            />
+          </View>
+
           <Text>Estado</Text>
-          <TextInput
-            onChangeText={(value) => setEstado(value)}
-            value={estado}
-            style={styles.text}
-            placeholder="Ingrese estado del proyecto"
-          />
+          <View style={styles.selector}>
+            <OptionSelector
+              selectOptions={statusOption}
+              selectedOption={selectedStatusOption}
+              setSelectedOption={setSelectedStatusOption}
+            />
+          </View>
 
           <Pressable onPress={toggleShowStartPicker}>
-            <Text>Fecha de inicio</Text>
-            <TextInput
-              value={startDateToShow}
-              style={styles.text}
-              placeholder="Fecha estimada de inicio"
-              placeholderTextColor="black"
-              editable={false}
-            />
+            <View style={styles.datePicker}>
+              <Text>Fecha de inicio</Text>
+              <TextInput
+                value={startDateToShow}
+                style={styles.text}
+                placeholder="     Fecha estimada de inicio     "
+                placeholderTextColor="black"
+                editable={false}
+              />
+            </View>
           </Pressable>
 
           {showStartPicker && (
@@ -250,14 +316,16 @@ const EditProject = ({ navigation, route }) => {
           )}
 
           <Pressable onPress={toggleShowFinishPicker}>
-            <Text>Fecha de fin</Text>
-            <TextInput
-              value={finishDateToShow}
-              style={styles.text}
-              placeholder="Fecha estimada de finalizacion"
-              placeholderTextColor="black"
-              editable={false}
-            />
+            <View style={styles.datePicker}>
+              <Text>Fecha de fin</Text>
+              <TextInput
+                value={finishDateToShow}
+                style={styles.text}
+                placeholder="Fecha estimada de finalizacion"
+                placeholderTextColor="black"
+                editable={false}
+              />
+            </View>
           </Pressable>
 
           {showFinishPicker && (
@@ -268,6 +336,15 @@ const EditProject = ({ navigation, route }) => {
               onChange={selectFinishDate}
             />
           )}
+
+          <Text>Estado de pago</Text>
+          <View style={styles.selector}>
+            <OptionSelector
+              selectOptions={paymentStatusOption}
+              selectedOption={selectedPaymentStatusOption}
+              setSelectedOption={setSelectedPaymentStatusOption}
+            />
+          </View>
 
           <View style={styles.buttons}>
             <Pressable style={styles.button} onPress={() => createProject()}>
@@ -319,6 +396,15 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: "black",
   },
+  selector: {
+    marginBottom: 10,
+    textAlign: "center",
+    width: "100%",
+  },
+  datePicker: {
+    alignItems: "center",
+    width: "100%",
+  },
   buttons: {
     flexDirection: "row",
   },
@@ -337,6 +423,12 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     fontFamily: "Satisfy",
     color: "black",
+  },
+  backButton: {
+    // Back button styles
+    position: "absolute",
+    top: 45,
+    left: 10,
   },
   backButton: {
     // Back button styles

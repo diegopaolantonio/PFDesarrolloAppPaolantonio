@@ -26,7 +26,7 @@ const Profile = ({ navigation }) => {
   const uid = useSelector((state) => state.authSlice.uid);
   const userData = useSelector((state) => state.authSlice.userData);
 
-  let profileImage = { id: uid, image: "" };
+  let profileImage = { image: "" };
 
   const defaultProfileImage =
     "https://cdn.pixabay.com/photo/2012/04/13/21/07/user-33638_1280.png";
@@ -58,7 +58,7 @@ const Profile = ({ navigation }) => {
 
     if (!result.canceled) {
       profileImage.image = `data:image/jpeg;base64,${result.assets[0].base64}`;
-      await putImage(profileImage);
+      await putImage({ uid, profileImage });
       refetch();
     }
   };
@@ -72,7 +72,7 @@ const Profile = ({ navigation }) => {
 
       if (!result.canceled) {
         profileImage.image = `data:image/jpeg;base64,${result.assets[0].base64}`;
-        await putImage(profileImage);
+        await putImage({ uid, profileImage });
         refetch();
       }
     } else {

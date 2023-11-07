@@ -12,6 +12,7 @@ import { useNavigation } from "@react-navigation/native";
 import Header from "../components/Header";
 import { colors } from "../theme/colors";
 import { useGetClientsQuery, usePutClientMutation } from "../services/daApi";
+import { AntDesign } from "@expo/vector-icons";
 
 const AddClient = ({ navigation, route }) => {
   const { uid, clientsArray } = route.params;
@@ -68,7 +69,7 @@ const AddClient = ({ navigation, route }) => {
 
   return (
     <SafeAreaView>
-      <Header title={"Agergar Cliente"} />
+      <Header title={"Agregar Cliente"} />
       <View style={styles.container}>
         <Text>Nombre</Text>
         <TextInput
@@ -122,6 +123,9 @@ const AddClient = ({ navigation, route }) => {
           </Pressable>
         </View>
       </View>
+      <Pressable style={styles.backButton} onPress={() => navigation.goBack()}>
+        <AntDesign name="leftcircleo" size={24} color="black" />
+      </Pressable>
     </SafeAreaView>
   );
 };
@@ -167,6 +171,12 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     fontFamily: "Satisfy",
     color: "black",
+  },
+  backButton: {
+    // Back button styles
+    position: "absolute",
+    top: 45,
+    left: 10,
   },
 });
 

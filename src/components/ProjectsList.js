@@ -21,19 +21,17 @@ const ProjectsList = ({ navigation }) => {
   } = useGetClientsQuery();
 
   if (clientList != undefined) {
-
     if (
-        clientList[uid][client].projects.length != 0 &&
-        clientList[uid][client].projects[0] != ""
-        ) {
-          projectsArray = clientList[uid][client].projects;
-          projectsArray.forEach(element => {
-            projectsNameArray.push(element.nombre);
-          });
-          showProjectsArray = true;
-        }
-
-      } else {
+      clientList[uid][client].projects.length != 0 &&
+      clientList[uid][client].projects[0] != ""
+    ) {
+      projectsArray = clientList[uid][client].projects;
+      projectsArray.forEach((element) => {
+        projectsNameArray.push(element.nombre);
+      });
+      showProjectsArray = true;
+    }
+  } else {
     showProjectsArray = false;
   }
 
@@ -49,9 +47,13 @@ const ProjectsList = ({ navigation }) => {
             <>
               <FlatList
                 data={projectsArray}
-                keyExtractor={item => item.id}
+                keyExtractor={(item) => item.id}
                 renderItem={({ item }) => (
-                  <ProjectItem item={item} projectsArray={projectsArray} navigation={navigation} />
+                  <ProjectItem
+                    item={item}
+                    projectsArray={projectsArray}
+                    navigation={navigation}
+                  />
                 )}
               />
             </>

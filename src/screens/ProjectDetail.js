@@ -20,6 +20,7 @@ const ProjectDetail = ({ navigation, route }) => {
       <Text style={styles.text}>Cotizacion N°: {item.cotizacion}</Text>
       <Text style={styles.text}>N° de orden: {item.orden}</Text>
       <Text style={styles.text}>Monto: {item.monto}</Text>
+      <Text style={styles.text}>Tipo de moneda: {item.coin}</Text>
       <Text style={styles.text}>Horas: {item.horas}</Text>
       <Text style={styles.text}>
         Fecha de inicio: {item.finishDate.day} / {item.finishDate.month} /{" "}
@@ -29,7 +30,8 @@ const ProjectDetail = ({ navigation, route }) => {
         Fecha de finalizacion: {item.startDate.day} / {item.startDate.month} /{" "}
         {item.startDate.year}
       </Text>
-      <Text style={styles.text}>Extado: {item.estado}</Text>
+      <Text style={styles.text}>Estado: {item.estado}</Text>
+      <Text style={styles.text}>Estado de pago: {item.paymentStatus}</Text>
 
       <Pressable style={styles.addButton} onPress={goToEditProject}>
         <AntDesign name="addfolder" size={24} color="black" />

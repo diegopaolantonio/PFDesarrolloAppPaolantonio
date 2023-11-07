@@ -2,6 +2,7 @@ import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Clients from "../screens/Clients";
 import Projects from "../screens/Projects";
+import ClientDetail from "../screens/ClientDetail";
 import ProjectDetail from "../screens/ProjectDetail";
 import AddClient from "../screens/AddClient";
 import AddProject from "../screens/AddProject";
@@ -18,6 +19,7 @@ const RootNavigation = () => {
     >
       <Stack.Screen component={Clients} name="clients" />
       <Stack.Screen component={Projects} name="projects" />
+      <Stack.Screen component={ClientDetail} name="clientDetail" />
       <Stack.Screen component={ProjectDetail} name="projectDetail" />
       <Stack.Screen component={AddClient} name="addClient" />
       <Stack.Screen component={AddProject} name="addProject" />
