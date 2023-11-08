@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Header from "../components/Header";
 import ClientsList from "../components/ClientsList";
 import {
@@ -6,6 +6,7 @@ import {
   StyleSheet,
   SafeAreaView,
   Pressable,
+  View,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { colors } from "../theme/colors";
@@ -23,16 +24,19 @@ const Clients = ({ navigation }) => {
     error,
     refetch,
   } = useGetClientsQuery();
-
+  
   const uid = useSelector((state) => state.authSlice.uid);
+
   let clientsArray = [];
 
-  if (userClients != undefined) {
-    dispatch(setUserClients(userClients));
-    for (const [key, value] of Object.entries(userClients[uid])) {
-      clientsArray.push(key);
+    if (userClients != undefined && uid != undefined && uid != null) {
+      dispatch(setUserClients(userClients));
+      if(userClients[uid] != undefined) {
+        for (const [key, value] of Object.entries(userClients[uid])) {
+          clientsArray.push(key);
+        }
+      }
     }
-  }
 
   const goToAddClient = () => {
     navigation.navigate("addClient", { uid: uid, clientsArray: clientsArray });
@@ -46,9 +50,9 @@ const Clients = ({ navigation }) => {
           <ActivityIndicator size="small" color="blue" />
         </View>
       ) : (
-        <>
-          <ClientsList navigation={navigation} />
-        </>
+        <View>
+          <ClientsList clientListData={userClients} navigation={navigation} />
+        </View>
       )}
       <Pressable style={styles.addButton} onPress={() => goToAddClient()}>
         <AntDesign name="addfolder" size={24} color="black" />

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+  Alert,
   Pressable,
   SafeAreaView,
   StyleSheet,
@@ -40,6 +41,15 @@ const Login = ({ navigation }) => {
       navigation.navigate("login");
     } catch (error) {
       console.log(error);
+      Alert.alert(
+        "Error de registro",
+        `${error}`,
+        [
+          {
+            text: "OK",
+          },
+        ]
+      );
     }
   };
 

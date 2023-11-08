@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Header from "../components/Header";
 import {
   Alert,
@@ -17,8 +17,15 @@ import { AntDesign } from "@expo/vector-icons";
 const ClientDetail = ({ navigation, route }) => {
   const { uid, item, userClient } = route.params;
   const [putImage, result] = usePutImageMutation();
-  const { data, isLoading, error, isError, refetch } = useGetImageQuery();
-  const diego = `${uid}/${item}`;
+  const {
+    data: clientImage,
+    isLoading,
+    error,
+    isError,
+    refetch,
+  } = useGetImageQuery();
+  const imagePath = `${uid}/${item}`;
+  let dbImage = null;
   let profileImage = { image: "" };
 
   const defaultProfileImage =
@@ -51,7 +58,7 @@ const ClientDetail = ({ navigation, route }) => {
 
     if (!result.canceled) {
       profileImage.image = `data:image/jpeg;base64,${result.assets[0].base64}`;
-      await putImage({ uid: diego, profileImage });
+      await putImage({ uid: imagePath, profileImage });
       refetch();
     }
   };
@@ -65,7 +72,7 @@ const ClientDetail = ({ navigation, route }) => {
 
       if (!result.canceled) {
         profileImage.image = `data:image/jpeg;base64,${result.assets[0].base64}`;
-        await putImage({ uid: diego, profileImage });
+        await putImage({ uid: imagePath, profileImage });
         refetch();
       }
     } else {
@@ -96,10 +103,21 @@ const ClientDetail = ({ navigation, route }) => {
     );
   };
 
+
+    if (clientImage[uid]) {
+      if (clientImage[uid][item]) {
+        if (
+          clientImage[uid][item].image) {
+            dbImage = clientImage[uid][item].image;
+          }
+        }
+      }
+
+  console.log(dbImage);
   return (
     <SafeAreaView style={styles.container}>
       <Header title="Detalle de proyecto" />
-      {data[uid][item] === null || data[uid][item] === undefined ? (
+      {isLoading || dbImage === null || dbImage === undefined ? (
         <>
           <Image
             style={styles.imagen}
@@ -113,10 +131,7 @@ const ClientDetail = ({ navigation, route }) => {
           <Image
             style={styles.imagen}
             source={{
-              uri:
-                data[uid][item] != null
-                  ? data[uid][item].image
-                  : defaultProfileImage,
+              uri: dbImage,
             }}
           />
         </>
@@ -128,16 +143,11 @@ const ClientDetail = ({ navigation, route }) => {
       <Text style={styles.text}>Pais: {userClient[item].pais}</Text>
       <Text style={styles.text}>CUIT: {userClient[item].cuit}</Text>
 
-      <Pressable
-        style={styles.button}
-        onPress={() => {
-          changeProfileImage();
-        }}
-      >
+      <Pressable style={styles.button} onPress={() => changeProfileImage()}>
         <Text style={styles.buttonText}>Cambiar foto de perfil</Text>
       </Pressable>
 
-      <Pressable style={styles.addButton} onPress={goToEditClient}>
+      <Pressable style={styles.addButton} onPress={() => goToEditClient()}>
         <AntDesign name="addfolder" size={24} color="black" />
       </Pressable>
 

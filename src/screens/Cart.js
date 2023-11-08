@@ -48,9 +48,16 @@ const Cart = () => {
       <Header title="Facturacion a cobrar" />
       <View style={styles.container}>
         <View style={styles.list}>
+          <View style={styles.containerDetalle}>
+          <Text style={styles.textItem}>Cliente</Text>
+          <Text style={styles.textItem}>Proyecto</Text>
+          <Text style={styles.textItem}>Pago</Text>
+          <Text style={styles.textItemQuantity}>Moneda</Text>
+          <Text style={styles.textItemQuantity}>Monto</Text>
+          </View>
           <FlatList
             data={totalCart}
-            keyExtractor={(key) => key}
+            keyExtractor={(item) => item.id}
             renderItem={({ item }) => <CartItem item={item} />}
           />
         </View>
@@ -66,6 +73,23 @@ const styles = StyleSheet.create({
   },
   list: {
     width: "100%",
+  },
+  containerDetalle: {
+    margin: 5,
+    flexDirection: "row",
+        // Border styles
+        borderColor: colors.heavyGreen,
+        borderRadius: 10,
+        borderWidth: 2,
+  },
+  textItem: {
+    margin: 5,
+    fontWeight: "600",
+    width: "20%",
+  },
+  textItemQuantity: {
+    margin: 5,
+    width: "15%",
   },
 });
 

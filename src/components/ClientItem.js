@@ -6,18 +6,14 @@ import { setClient } from "../redux/slice/authSlice";
 
 const ClientItem = ({ item, navigation }) => {
   const dispatch = useDispatch();
-  
+
   const selectClient = () => {
     dispatch(setClient(item));
     navigation.navigate("projects", { item: item });
   };
 
   return (
-    <Pressable
-      onPress={() => {
-        selectClient();
-      }}
-    >
+    <Pressable onPress={() => selectClient()}>
       <Text style={styles.categoryTitle}>{item}</Text>
     </Pressable>
   );

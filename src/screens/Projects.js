@@ -15,8 +15,6 @@ const Projects = ({ route, navigation }) => {
   const uid = useSelector((state) => state.authSlice.uid);
   const userClients = useSelector((state) => state.authSlice.userClients);
 
-  let clientProjects = userClients[uid][item].projects;
-
   const clientOptions = [
     "Sin seleccion",
     "Mostrar datos del cliente",

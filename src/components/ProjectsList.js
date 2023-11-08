@@ -20,7 +20,7 @@ const ProjectsList = ({ navigation }) => {
     refetch,
   } = useGetClientsQuery();
 
-  if (clientList != undefined) {
+  if (clientList != undefined && uid != undefined && client != undefined) {
     if (
       clientList[uid][client].projects.length != 0 &&
       clientList[uid][client].projects[0] != ""
