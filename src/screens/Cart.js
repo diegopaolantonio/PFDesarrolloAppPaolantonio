@@ -1,5 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { FlatList, SafeAreaView, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import Header from "../components/Header";
 import CartItem from "../components/CartItem";
 import { colors } from "../theme/colors";
@@ -49,17 +56,25 @@ const Cart = () => {
       <View style={styles.container}>
         <View style={styles.list}>
           <View style={styles.containerDetalle}>
-          <Text style={styles.textItem}>Cliente</Text>
-          <Text style={styles.textItem}>Proyecto</Text>
-          <Text style={styles.textItem}>Pago</Text>
-          <Text style={styles.textItemQuantity}>Moneda</Text>
-          <Text style={styles.textItemQuantity}>Monto</Text>
+            <Text style={styles.textItem}>Cliente</Text>
+            <Text style={styles.textItem}>Proyecto</Text>
+            <Text style={styles.textItem}>Pago</Text>
+            <Text style={styles.textItemQuantity}>Moneda</Text>
+            <Text style={styles.textItemQuantity}>Monto</Text>
           </View>
-          <FlatList
-            data={totalCart}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => <CartItem item={item} />}
-          />
+          {isLoading ? (
+            <View style={styles.indicator}>
+              <ActivityIndicator size="small" color="blue" />
+            </View>
+          ) : (
+            <>
+              <FlatList
+                data={totalCart}
+                keyExtractor={(item) => item.id}
+                renderItem={({ item }) => <CartItem item={item} />}
+              />
+            </>
+          )}
         </View>
       </View>
     </SafeAreaView>
@@ -77,10 +92,10 @@ const styles = StyleSheet.create({
   containerDetalle: {
     margin: 5,
     flexDirection: "row",
-        // Border styles
-        borderColor: colors.heavyGreen,
-        borderRadius: 10,
-        borderWidth: 2,
+    // Border styles
+    borderColor: colors.heavyGreen,
+    borderRadius: 10,
+    borderWidth: 2,
   },
   textItem: {
     margin: 5,

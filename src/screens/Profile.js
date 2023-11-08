@@ -148,7 +148,10 @@ const Profile = ({ navigation }) => {
     <SafeAreaView>
       <Header title="Perfil" />
       <View style={styles.container}>
-        {data === null || data === undefined || uid === null || uid === undefined ? (
+        {data === null ||
+        data === undefined ||
+        uid === null ||
+        uid === undefined ? (
           <>
             <Image
               style={styles.imagen}
@@ -167,7 +170,10 @@ const Profile = ({ navigation }) => {
             />
           </>
         )}
-        {userData === null || userData === undefined || uid === null || uid === undefined ? (
+        {userData === null ||
+        userData === undefined ||
+        uid === null ||
+        uid === undefined ? (
           <>
             <Text style={styles.text}>Nombre:</Text>
             <Text style={styles.text}>Pais:</Text>

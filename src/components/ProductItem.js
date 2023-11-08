@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet, Image, Pressable } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { colors } from "../theme/colors";
 import { setProductSelected } from "../redux/slice/homeSlice";
 

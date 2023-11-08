@@ -41,15 +41,11 @@ const Login = ({ navigation }) => {
       navigation.navigate("login");
     } catch (error) {
       console.log(error);
-      Alert.alert(
-        "Error de registro",
-        `${error}`,
-        [
-          {
-            text: "OK",
-          },
-        ]
-      );
+      Alert.alert("Error de registro", `${error}`, [
+        {
+          text: "OK",
+        },
+      ]);
     }
   };
 

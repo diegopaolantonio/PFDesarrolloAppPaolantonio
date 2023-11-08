@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { SafeAreaView, StyleSheet, Pressable } from "react-native";
-import Search from "../components/Search";
 import Header from "../components/Header";
 import { useNavigation } from "@react-navigation/native";
 import { useSelector } from "react-redux";

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Header from "../components/Header";
 import {
   Alert,
@@ -103,15 +103,13 @@ const ClientDetail = ({ navigation, route }) => {
     );
   };
 
-
-    if (clientImage[uid]) {
-      if (clientImage[uid][item]) {
-        if (
-          clientImage[uid][item].image) {
-            dbImage = clientImage[uid][item].image;
-          }
-        }
+  if (clientImage[uid]) {
+    if (clientImage[uid][item]) {
+      if (clientImage[uid][item].image) {
+        dbImage = clientImage[uid][item].image;
       }
+    }
+  }
 
   console.log(dbImage);
   return (

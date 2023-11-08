@@ -1,5 +1,5 @@
 import React from "react";
-import { View, FlatList, StyleSheet, ActivityIndicator } from "react-native";
+import { View, FlatList, StyleSheet } from "react-native";
 import ClientItem from "./ClientItem";
 import { colors } from "../theme/colors";
 import { useSelector } from "react-redux";
@@ -9,7 +9,7 @@ const ClientsList = ({ clientListData, navigation }) => {
   const clientArray = [];
 
   if (clientListData != undefined && uid != undefined && uid != null) {
-    if(clientListData[uid] != undefined) {
+    if (clientListData[uid] != undefined) {
       for (const [key, value] of Object.entries(clientListData[uid])) {
         clientArray.push(key);
       }

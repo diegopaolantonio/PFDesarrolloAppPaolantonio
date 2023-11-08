@@ -63,15 +63,11 @@ const Login = ({ navigation }) => {
       dispatch(setUserClients(userClients));
     } catch (error) {
       console.log(error);
-      Alert.alert(
-        "Error de login",
-        `${error}`,
-        [
-          {
-            text: "OK",
-          },
-        ]
-      );
+      Alert.alert("Error de login", `${error}`, [
+        {
+          text: "OK",
+        },
+      ]);
     }
   };
 

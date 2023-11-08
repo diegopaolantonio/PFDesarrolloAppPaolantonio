@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Header from "../components/Header";
 import ClientsList from "../components/ClientsList";
 import {
@@ -24,19 +24,19 @@ const Clients = ({ navigation }) => {
     error,
     refetch,
   } = useGetClientsQuery();
-  
+
   const uid = useSelector((state) => state.authSlice.uid);
 
   let clientsArray = [];
 
-    if (userClients != undefined && uid != undefined && uid != null) {
-      dispatch(setUserClients(userClients));
-      if(userClients[uid] != undefined) {
-        for (const [key, value] of Object.entries(userClients[uid])) {
-          clientsArray.push(key);
-        }
+  if (userClients != undefined && uid != undefined && uid != null) {
+    dispatch(setUserClients(userClients));
+    if (userClients[uid] != undefined) {
+      for (const [key, value] of Object.entries(userClients[uid])) {
+        clientsArray.push(key);
       }
     }
+  }
 
   const goToAddClient = () => {
     navigation.navigate("addClient", { uid: uid, clientsArray: clientsArray });
